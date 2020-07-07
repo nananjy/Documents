@@ -1,111 +1,117 @@
-# 框架整理 
+# 云部署框架 
 
-## 基础架构(infrastructure)
-1 SpringBoot
-2 Spring5
+## 应用表示层UI
 
-## 构建(establishment)
-1 Maven
-2 Gradle
+#### 基础架构(infrastructure)
+ - [SpringBoot](1-1_infrastructure/SpringBoot.md)
+ - [Spring5](1-1_infrastructure/Spring5.md)
 
-## 远程调用框架(remote_invocation_frameworks)
-1 RestTemplate
-2 HttpComponents
-3 OKHttp
-4 Netty4
+#### 构建(establishment)
+ - [Maven](1-2_establishment/Maven.md)
+ - [Gradle](1-2_establishment/Gradle.md)
 
-## 微服务技术(microservice_technology)
-1 Spring Cloud Alibaba
-2 Dubbo
-3 HSF
-4 Motan
-5 专有云EDAS
+#### 远程调用框架(remote_invocation_frameworks)
+ - [RestTemplate](1-3_remote_invocation_frameworks/RestTemplate.md)
+ - [HttpComponents](1-3_remote_invocation_frameworks/HttpComponents.md)
+ - [OKHttp](1-3_remote_invocation_frameworks/OKHttp.md)
+ - [Netty4](1-3_remote_invocation_frameworks/Netty4.md)
 
-## API网关(API_gateway)
-1 专有云API网关
+#### 微服务技术(microservice_technology)
+ - [Spring Cloud Alibaba](1-4_microservice_technology/SpringCloudAlibaba.md)
+ - [Dubbo](1-4_microservice_technology/Dubbo.md)
+ - [HSF](1-4_microservice_technology/HSF.md)
+ - [Motan](1-4_microservice_technology/Motan.md)
+ - [专有云EDAS](1-4_microservice_technology/专有云EDAS.md)
 
-## 日志(log)
-1 Slf4j
-2 Logback
+#### API网关(API_gateway)
+ - [专有云API网关](1-5_API_gateway/专有云API网关.md)
 
-## ORMapping
-1 Mybatis
+#### 日志(log)
+ - [Slf4j](1-6_log/Slf4j.md)
+ - [Logback](1-6_log/Logback.md)
 
-## API文档(API_documents)
-1 Swagger2
+#### ORMapping
+ - [Mybatis](1-7_ORMapping/Mybatis.md)
 
-## 数据库连接池(database_connection_pool)
-1 Druid
+#### API文档(API_documents)
+ - [Swagger2](1-8_API_documents/Swagger2.md)
 
-## 定时器(timer)
-1 Quartz
+#### 数据库连接池(database_connection_pool)
+ - [Druid](1-9_database_connection_pool/Druid.md)
 
-## 安全(security)
-1 Shiro
-2 Jasypt
-3 Spring Security
+#### 定时器(timer)
+ - [Quartz](1-10_timer/Quartz.md)
 
-## 中间件(middleware)
-1 Tomcat9
+#### 安全(security)
+ - [Shiro](1-11_security/Shiro.md)
+ - [Jasypt](1-11_security/Jasypt.md)
+ - [Spring Security](1-11_security/SpringSecurity.md)
 
-## WEB服务器(WEB_server)
-1 Nginx
-2 OpenResty
-3 Apache Http Server
+## 业务逻辑层BLL
 
-## 全文搜索(text_search)
-1 Lucene
-2 ElasticSearch
+#### 中间件(middleware)
+ - [Tomcat9](2-1_middleware/Tomcat9.md)
 
-## 日志平台(logging_platform)
-1 ELKKB
+#### WEB服务器(WEB_server)
+ - [Nginx](2-2_WEB_server/Nginx.md)
+ - [OpenResty](2-2_WEB_server/OpenResty.md)
+ - [Apache Http Server](2-2_WEB_server/ApacheHttpServer.md)
+
+#### 全文搜索(text_search)
+ - [Lucene](2-3_text_search/Lucene.md)
+ - [ElasticSearch](2-3_text_search/ElasticSearch.md)
+
+#### 日志平台(logging_platform)
+ - [ELKKB](2-4_logging_platform/ELKKB.md)
 (https://zhuanlan.zhihu.com/p/96113548) 
 
-## 分布式协同(distributed_collaboration)
-1 Zookeeper
+#### 分布式协同(distributed_collaboration)
+ - [Zookeeper](2-5_distributed_collaboration/Zookeeper.md)
 
-## 消息队列(message_queue)
-1 RocketMQ
-2 Kafka
+#### 消息队列(message_queue)
+ - [RocketMQ](2-6_message_queue/RocketMQ.md)
+ - [Kafka](2-6_message_queue/Kafka.md)
 
-## 缓存(cache)
-1 Redis
+#### 缓存(cache)
+ - [Redis](2-7_cache/Redis.md)
 
-## 任务调度(job_schedule)
-1 Elastic-Job
+#### 任务调度(job_schedule)
+ - [Elastic-Job](2-8_job_schedule/ElasticJob.md)
 
-## 分布式数据库(distributed_database)
-1 DRDS
+#### 分布式数据库(distributed_database)
+ - [DRDS](2-9_distributed_database/DRDS.md)
 
-## 分布式配置(distributed_configuration)
-1 Apollo
+#### 分布式配置(distributed_configuration)
+ - [Apollo](2-10_distributed_configuration/Apollo.md)
 
-## 应用性能监控(application_performance_monitoring)
-1 Skywalking
-2 专有云ARMS
+#### 应用性能监控(application_performance_monitoring)
+ - [Skywalking](2-11_application_performance_monitoring/Skywalking.md)
+ - [专有云ARMS](2-11_application_performance_monitoring/专有云ARMS.md)
 
-## 关系型数据库(relational_database)
-1 MySQL5.7
-2 专有云RDS
+## 数据访问层DAL
 
-## 文件存储(file_store)
-1 专有云NAS
-2 专有云OSS
+#### 关系型数据库(relational_database)
+ - [MySQL5.7](3-1_relational_database/MySQL5.7.md)
+ - [专有云RDS](3-1_relational_database/专有云RDS.md)
 
-## NoSql
-1 MongoDB
-2 HBase
+#### 文件存储(file_store)
+ - [专有云NAS](3-2_file_store/专有云NAS.md)
+ - [专有云OSS](3-2_file_store/专有云OSS.md)
 
-## JVM
-1 JDK8
+#### NoSql
+ - [MongoDB](3-3_NoSql/MongoDB.md)
+ - [HBase](3-3_NoSql/HBase.md)
 
-## 容器服务(container_services)
-1 Docker
-2 Kubernete
-3 Habor
-4 Helm
-5 Prometheus
-6 CoreDNS
+#### JVM
+ - [JDK8](3-4_JVM/JDK8.md)
+
+#### 容器服务(container_services)
+ - [Docker](3-5_container_services/Docker.md)
+ - [Kubernete](3-5_container_services/Kubernete.md)
+ - [Habor](3-5_container_services/Habor.md)
+ - [Helm](3-5_container_services/Helm.md)
+ - [Prometheus](3-5_container_services/Prometheus.md)
+ - [CoreDNS](3-5_container_services/CoreDNS.md)
 
 
 
