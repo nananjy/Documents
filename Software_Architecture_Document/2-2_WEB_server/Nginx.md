@@ -14,7 +14,7 @@
 # Nginx 安装
 
 ## 安装编译工具及库文件
-[root@iz7uq05oss9ztin71l2axsz files]# yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
+>[root@iz7uq05oss9ztin71l2axsz files]# yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel
 
 ## 首先要安装 PCRE
 
@@ -141,11 +141,11 @@ http
 
    ### https证书部署
    
-    - 获取证书
+   - 获取证书
 Nginx文件夹内获得SSL证书文件 1_www.domain.com_bundle.crt 和私钥文件 2_www.domain.com.key,
 1_www.domain.com_bundle.crt 文件包括两段证书代码 “-----BEGIN CERTIFICATE-----”和“-----END CERTIFICATE-----”,
 2_www.domain.com.key 文件包括一段私钥代码“-----BEGIN RSA PRIVATE KEY-----”和“-----END RSA PRIVATE KEY-----”。
-    - 证书安装
+   - 证书安装
 将域名 www.domain.com 的证书文件1_www.domain.com_bundle.crt 、私钥文件2_www.domain.com.key保存到同一个目录，例如/usr/local/nginx/conf目录下。
 更新Nginx根目录下 conf/nginx.conf 文件如下
 ```
@@ -165,7 +165,7 @@ server {
         }
     }
 ```
-    - 使用全站加密，http自动跳转https（可选）
+   - 使用全站加密，http自动跳转https（可选）
 对于用户不知道网站可以进行https访问的情况下，让服务器自动把http的请求重定向到https。
 在服务器这边的话配置的话，可以在页面里加js脚本，也可以在后端程序里写重定向，当然也可以在web服务器来实现跳转。Nginx是支持rewrite的（只要在编译的时候没有去掉pcre）
 在http的server里增加rewrite ^(.*) https://$host$1 permanent;
