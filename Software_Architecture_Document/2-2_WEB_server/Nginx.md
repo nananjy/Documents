@@ -19,49 +19,49 @@
 ## 首先要安装 PCRE
 
 1. 下载安装包
-pcre-8.43.tar.gz
+>pcre-8.43.tar.gz
 2. 解压安装包
-[root@iz7uq05oss9ztin71l2axsz files]# cp pcre-8.43.tar.gz /usr/local/
-[root@iz7uq05oss9ztin71l2axsz files]# cd /usr/local/
-[root@iz7uq05oss9ztin71l2axsz local]# tar zxvf pcre-8.43.tar.gz
+>[root@iz7uq05oss9ztin71l2axsz files]# cp pcre-8.43.tar.gz /usr/local/
+><br/>[root@iz7uq05oss9ztin71l2axsz files]# cd /usr/local/
+><br/>[root@iz7uq05oss9ztin71l2axsz local]# tar zxvf pcre-8.43.tar.gz
 3. 进入目录
-[root@iz7uq05oss9ztin71l2axsz local]# cd pcre-8.43/
+>[root@iz7uq05oss9ztin71l2axsz local]# cd pcre-8.43/
 4. 编译安装
-[root@iz7uq05oss9ztin71l2axsz pcre-8.43]# ./configure
-报错 configure: error: Invalid C++ compiler or C++ compiler flags
-报错原因：没有安装编译工具
-[root@iz7uq05oss9ztin71l2axsz pcre-8.43]# make && make install
+>[root@iz7uq05oss9ztin71l2axsz pcre-8.43]# ./configure
+><br/>报错 configure: error: Invalid C++ compiler or C++ compiler flags
+><br/>原因：没有安装编译工具
+><br/>[root@iz7uq05oss9ztin71l2axsz pcre-8.43]# make && make install
 5. 查看pcre版本
-[root@iz7uq05oss9ztin71l2axsz pcre-8.43]# pcre-config --version
+>[root@iz7uq05oss9ztin71l2axsz pcre-8.43]# pcre-config --version
 8.43
 6. 如需卸载，到pcre目录下
-make uninstall
+>make uninstall
 
 ## 安装 Nginx
 
 1. 下载 Nginx
-nginx-1.18.0.tar.gz
+>nginx-1.18.0.tar.gz
 2. 解压安装包
-[root@iz7uq05oss9ztin71l2axsz local]# cp /opt/files/nginx-1.18.0.tar.gz ./
-[root@iz7uq05oss9ztin71l2axsz local]# tar zxvf nginx-1.18.0.tar.gz
+>[root@iz7uq05oss9ztin71l2axsz local]# cp /opt/files/nginx-1.18.0.tar.gz ./
+><br/>[root@iz7uq05oss9ztin71l2axsz local]# tar zxvf nginx-1.18.0.tar.gz
 3. 进入安装包目录
-[root@iz7uq05oss9ztin71l2axsz local]# cd nginx-1.18.0/
+>[root@iz7uq05oss9ztin71l2axsz local]# cd nginx-1.18.0/
 4. 编译安装
-[root@iz7uq05oss9ztin71l2axsz nginx-1.18.0]# ./configure --prefix=/usr/local/nginx-1.18.0/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=/usr/local/pcre-8.43
-[root@iz7uq05oss9ztin71l2axsz nginx-1.18.0]# make
-[root@iz7uq05oss9ztin71l2axsz nginx-1.18.0]# make install >> log.log
-5、查看nginx版本 
-[root@iz7uq05oss9ztin71l2axsz nginx-1.18.0]# /usr/local/nginx-1.18.0/nginx/sbin/nginx -v
-nginx version: nginx/1.18.0
+>[root@iz7uq05oss9ztin71l2axsz nginx-1.18.0]# ./configure --prefix=/usr/local/nginx-1.18.0/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=/usr/local/pcre-8.43
+><br/>[root@iz7uq05oss9ztin71l2axsz nginx-1.18.0]# make
+><br/>[root@iz7uq05oss9ztin71l2axsz nginx-1.18.0]# make install >> log.log
+5. 查看nginx版本 
+>[root@iz7uq05oss9ztin71l2axsz nginx-1.18.0]# /usr/local/nginx-1.18.0/nginx/sbin/nginx -v
+><br/>nginx version: nginx/1.18.0
 
 ## Nginx 配置
 
 1. 创建 Nginx 运行使用的用户 www
-    [root@bogon conf]# /usr/sbin/groupadd www 
-    [root@bogon conf]# /usr/sbin/useradd -g www www
+>[root@bogon conf]# /usr/sbin/groupadd www 
+><br/>[root@bogon conf]# /usr/sbin/useradd -g www www
 2. 配置nginx.conf ，将/usr/local/webserver/nginx/conf/nginx.conf替换为以下内容
-    参考：https://blog.csdn.net/weixin_42167759/article/details/85049546
-   [root@bogon conf]#  cat /usr/local/webserver/nginx/conf/nginx.conf
+>参考：https://blog.csdn.net/weixin_42167759/article/details/85049546
+><br/>[root@bogon conf]#  cat /usr/local/webserver/nginx/conf/nginx.conf
 ```
 user www www;
 worker_processes 2; #设置值和CPU核心数一致
@@ -139,12 +139,13 @@ http
 }
 ```
 
-### https证书部署
- - 获取证书
+   ### https证书部署
+   
+    - 获取证书
 Nginx文件夹内获得SSL证书文件 1_www.domain.com_bundle.crt 和私钥文件 2_www.domain.com.key,
 1_www.domain.com_bundle.crt 文件包括两段证书代码 “-----BEGIN CERTIFICATE-----”和“-----END CERTIFICATE-----”,
 2_www.domain.com.key 文件包括一段私钥代码“-----BEGIN RSA PRIVATE KEY-----”和“-----END RSA PRIVATE KEY-----”。
- - 证书安装
+    - 证书安装
 将域名 www.domain.com 的证书文件1_www.domain.com_bundle.crt 、私钥文件2_www.domain.com.key保存到同一个目录，例如/usr/local/nginx/conf目录下。
 更新Nginx根目录下 conf/nginx.conf 文件如下
 ```
@@ -164,28 +165,28 @@ server {
         }
     }
 ```
- - 使用全站加密，http自动跳转https（可选）
+    - 使用全站加密，http自动跳转https（可选）
 对于用户不知道网站可以进行https访问的情况下，让服务器自动把http的请求重定向到https。
 在服务器这边的话配置的话，可以在页面里加js脚本，也可以在后端程序里写重定向，当然也可以在web服务器来实现跳转。Nginx是支持rewrite的（只要在编译的时候没有去掉pcre）
 在http的server里增加rewrite ^(.*) https://$host$1 permanent;
 这样就可以实现80进来的请求，重定向为https了。
 
 3. 检查配置文件nginx.conf的正确性命令
-[root@bogon conf]# /usr/local/webserver/nginx/sbin/nginx -t
+>[root@bogon conf]# /usr/local/webserver/nginx/sbin/nginx -t
 
 ## 启动 Nginx
 
 1. Nginx 启动命令
-[root@bogon conf]# /usr/local/webserver/nginx/sbin/nginx
+>[root@bogon conf]# /usr/local/webserver/nginx/sbin/nginx
 
 ## 访问站点
 
 ## Nginx 其他命令
 1. 重新载入配置文件
-/usr/local/webserver/nginx/sbin/nginx -s reload
+>/usr/local/webserver/nginx/sbin/nginx -s reload
 2. 重启 Nginx
-/usr/local/webserver/nginx/sbin/nginx -s reopen
+>/usr/local/webserver/nginx/sbin/nginx -s reopen
 3. 停止 Nginx
-/usr/local/webserver/nginx/sbin/nginx -s stop
+>/usr/local/webserver/nginx/sbin/nginx -s stop
 
 
