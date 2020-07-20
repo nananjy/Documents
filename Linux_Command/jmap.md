@@ -6,20 +6,17 @@ jmap命令是一个可以输出所有内存中对象的工具，甚至可以将V
 >jmap -J-d64 -heap pid
 
 ## 参数格式
-jmap [option] <pid>
-   (to connect to running process) 连接到正在运行的进程
-jmap [option] <executable <core>
-   (to connect to a core file)     连接到核心文件
-jmap [option] [server_id@]<remote server IP or hostname>
-   (to connect to remote debug server) 连接到远程调试服务
+>jmap [option] <pid> (to connect to running process) 连接到正在运行的进程
+><br/>jmap [option] <executable <core> (to connect to a core file)     连接到核心文件
+><br/>jmap [option] [server_id@]<remote server IP or hostname> (to connect to remote debug server) 连接到远程调试服务
 
 
 ## 参数说明
 >pid:    目标进程的PID，进程编号，可以采用ps -ef | grep java 查看java进程的PID;
->executable:     产生core dump的java可执行程序;
->core:     将被打印信息的core dump文件;
->remote-hostname-or-IP:     远程debug服务的主机名或ip;
->server-id:     唯一id,假如一台主机上多个远程debug服务;
+><br/>executable:     产生core dump的java可执行程序;
+><br/>core:     将被打印信息的core dump文件;
+><br/>remote-hostname-or-IP:     远程debug服务的主机名或ip;
+><br/>server-id:     唯一id,假如一台主机上多个远程debug服务;
 
 ## 基本参数
 1. -dump:[live,]format=b,file=<filename> 使用hprof二进制形式,输出jvm的heap内容到文件=.  live子选项是可选的，假如指定live选项,那么只输出活的对象到文件.命令：
@@ -28,10 +25,9 @@ jmap [option] [server_id@]<remote server IP or hostname>
 >jmap -finalizerinfo 3772
 3. -heap 打印heap的概要信息，GC使用的算法，heap（堆）的配置及JVM堆内存的使用情况.命令：
 >jmap -heap 19570
-
+```
 [root@CBD-WEB-T1 ~]# ps aux | grep java 
 root     22431  0.0  6.1 3712556 241512 ?      Sl    2019 192:16 java -jar mpms-mcsi-send-1.0-SNAPSHOT.jar
-
 [root@CBD-WEB-T1 ~]# jmap -J-d64 -heap 22431 
 Attaching to process ID 22431, please wait...
 Debugger attached successfully.
@@ -79,7 +75,7 @@ PS Old Generation                   #老年代使用情况
    67.55465283805941% used                      #老年代使用比例
 
 23660 interned Strings occupying 2175432 bytes.
-
+```
 4. -histo[:live] 打印每个class的实例数目,内存占用,类全名信息. VM的内部类名字开头会加上前缀”*”. 如果live子参数加上后,只统计活的对象数量.命令：
 >jmap -histo:live 19570
 
