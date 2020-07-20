@@ -20,11 +20,11 @@ jmap命令是一个可以输出所有内存中对象的工具，甚至可以将V
 
 ## 基本参数
 1. -dump:[live,]format=b,file=<filename> 使用hprof二进制形式,输出jvm的heap内容到文件=.  live子选项是可选的，假如指定live选项,那么只输出活的对象到文件.命令：
->jmap -dump:live,format=b,file=myjmapfile.txt 19570
+>jmap -dump:live,format=b,file=myjmapfile.txt 22431
 2. -finalizerinfo 打印正等候回收的对象的信息，命令：
->jmap -finalizerinfo 3772
+>jmap -finalizerinfo 22431
 3. -heap 打印heap的概要信息，GC使用的算法，heap（堆）的配置及JVM堆内存的使用情况.命令：
->jmap -heap 19570
+>jmap -heap 22431
 ```
 [root@CBD-WEB-T1 ~]# ps aux | grep java 
 root     22431  0.0  6.1 3712556 241512 ?      Sl    2019 192:16 java -jar mpms-mcsi-send-1.0-SNAPSHOT.jar
@@ -77,10 +77,10 @@ PS Old Generation                   #老年代使用情况
 23660 interned Strings occupying 2175432 bytes.
 ```
 4. -histo[:live] 打印每个class的实例数目,内存占用,类全名信息. VM的内部类名字开头会加上前缀”*”. 如果live子参数加上后,只统计活的对象数量.命令：
->jmap -histo:live 19570
+>jmap -histo:live 22431
 
 5. -permstat 打印classload和jvm heap长久层的信息.包含每个classloader的名字,活泼性,地址,父classloader和加载的class数量.另外,内部String的数量和占用内存数也会打印出来.命令：
->jmap -permstat 19570
+>jmap -permstat 22431
 6. -F 强迫.在pid没有相应的时候使用-dump或者-histo参数. 在这个模式下,live子参数无效. 
 7. -h | -help 打印辅助信息 
 8. -J 传递参数给jmap启动的jvm. 
