@@ -17,3 +17,11 @@
 
 https://github.com/nananjy/Documents/blob/master/Software_Architecture_Document/1-1_infrastructure/Spring5.md
 
+## Markdown操作
+
+1. 取消自动识别链接
+在链接前后添加\`(backtick)扩起来
+2. 换行 
+方式一，添加\\<\br/>；方式二，文末添加两个空格字符；方式三，文字前后空一行。
+
+
