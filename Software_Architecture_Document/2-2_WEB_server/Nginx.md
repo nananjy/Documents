@@ -164,6 +164,8 @@ server {
         }
     }
 ```
+>警告nginx: [warn] the "ssl" directive is deprecated, use the "listen ... ssl" directive instead
+>ssl不建议作为一个指令使用，而只是listen指令的一个参数。如果使用listen 443 ssl，删除ssl on就行。
    - 使用全站加密，http自动跳转https（可选）
 >对于用户不知道网站可以进行https访问的情况下，让服务器自动把http的请求重定向到https。
 在服务器这边的话配置的话，可以在页面里加js脚本，也可以在后端程序里写重定向，当然也可以在web服务器来实现跳转。Nginx是支持rewrite的（只要在编译的时候没有去掉pcre）
