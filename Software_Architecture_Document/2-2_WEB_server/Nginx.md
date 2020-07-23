@@ -172,6 +172,17 @@ server {
 在http的server里增加rewrite ^(.*) https://$host$1 permanent;
 这样就可以实现80进来的请求，重定向为https了。
 
+
+### 设置自定义Header
+
+- 获取用户的ip地址，比如做异地登陆的判断，或者统计ip访问次数等，通常情况下我们使用request.getRemoteAddr()就可以获取到客户端ip，但是当我们使用了nginx作为反向代理后，使用request.getRemoteAddr()获取到的就一直是nginx服务器的ip的地址；
+- 获取客户端浏览器url。
+```
+proxy_set_header Host $host; 
+获取客户端访问的头部，它的值在请求包含"Host"请求头时为"Host"字段的值，在请求未携带"Host"请求头时为虚拟主机的主域名。
+```
+[Nginx反向代理配置与测试](2-2_WEB_server/Nginx/Nginx反向代理配置与测试.md)
+
 3. 检查配置文件nginx.conf的正确性命令
 >[root@bogon conf]# /usr/local/webserver/nginx/sbin/nginx -t
 
