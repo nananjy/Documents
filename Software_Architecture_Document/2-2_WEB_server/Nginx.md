@@ -181,7 +181,7 @@ server {
 proxy_set_header Host $host; 
 获取客户端访问的头部，它的值在请求包含"Host"请求头时为"Host"字段的值，在请求未携带"Host"请求头时为虚拟主机的主域名。
 ```
-[Nginx反向代理配置与测试](2-2_WEB_server/Nginx/Nginx反向代理配置与测试.md)
+[Nginx反向代理配置与测试](Nginx/Nginx反向代理配置与测试.md)
 
 3. 检查配置文件nginx.conf的正确性命令
 >[root@bogon conf]# /usr/local/webserver/nginx/sbin/nginx -t
