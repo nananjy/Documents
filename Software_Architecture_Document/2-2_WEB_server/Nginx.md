@@ -198,7 +198,133 @@ proxy_set_header Host $host;
 >/usr/local/webserver/nginx/sbin/nginx -s reload
 2. 重启 Nginx
 >/usr/local/webserver/nginx/sbin/nginx -s reopen
+><br/>停止再启动
+><br/>[root@svc-yun-ejb3-vm ~]# /usr/local/nginx/sbin/nginx -s quit
+><br/>[root@svc-yun-ejb3-vm ~]# /usr/local/nginx/sbin/nginx
 3. 停止 Nginx
 >/usr/local/webserver/nginx/sbin/nginx -s stop
+
+
+## HTTPS证书安装遇到的问题
+
+>[root@svc-yun-ejb4-vm https_certificate]# /usr/local/nginx/sbin/nginx -s reload
+><br/>nginx: [emerg] the "ssl" parameter requires ngx_http_ssl_module in /usr/local/nginx/conf/nginx.conf:103
+- 情况一：配置文件格式不正确
+- 情况二：ssl模块并未被安装
+默认情况下ssl模块并未被安装，如果要使用该模块则需要在编译nginx时指定–with-http_ssl_module参数，编译安装的时候带上--with-http_ssl_module配置就行
+1. 查看是否开启ssl模块
+```
+[root@svc-yun-ejb4-vm nginx-1.14.2]# /usr/local/nginx/sbin/nginx -V
+nginx version: nginx/1.14.2
+built by gcc 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC) 
+configure arguments:
+为空表示没有开启
+```
+2. 开启ssl模块，
+    1. 切换到源码包
+    >cd /opt/nginx-1.14.2/
+    2. 配置信息
+    ```
+    ./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module
+    报错./configure: error: SSL modules require the OpenSSL library.
+    安装yum -y install make zlib zlib-devel gcc-c++ libtool openssl openssl-devel
+    报错perl-Thread-Queue-3.02-2.el7.noarch: [Errno 256] No more mirrors to try.
+    编辑yum镜像配置，注释掉本地镜像
+    [root@svc-yun-ejb4-vm nginx-1.14.2]# vi /etc/yum.repos.d/local.repo
+    #[local]
+    #name=local  - Source Bate
+    #baseurl=file:///media/cdrom
+    #enabled=1
+    #gpgcheck=0
+    继续安装，成功Installed:libtool.x86_64 0:2.4.2-22.el7_3    openssl-devel.x86_64 1:1.0.2k-8.el7
+    继续配置，成功Configuration summary  + using system PCRE library  + using system OpenSSL library  + using system zlib library
+    ```
+    3. 执行命令
+    >[root@svc-yun-ejb4-vm nginx-1.14.2]# make
+    4. 备份原有已安装好的nginx
+    >[root@svc-yun-ejb4-vm nginx-1.14.2]# cp /usr/local/nginx/sbin/nginx /usr/local/nginx/sbin/nginx.bak
+    5. 将刚刚编译好的nginx覆盖掉原有的nginx （这个时候nginx要停止状态）
+    ```
+    [root@svc-yun-ejb4-vm nginx-1.14.2]# /usr/local/nginx/sbin/nginx -s stop
+    nginx: [emerg] the "ssl" parameter requires ngx_http_ssl_module in /usr/local/nginx/conf/nginx.conf:103
+    [root@svc-yun-ejb4-vm nginx-1.14.2]# ps aux | grep nginx
+    root     46696  0.0  0.0 112660   944 pts/0    S+   10:11   0:00 grep --color=auto nginx
+    root     48960  0.0  0.0  20500   616 ?        Ss    2019   0:00 nginx: master process ./nginx
+    nobody   48961  0.0  0.0  20944  1580 ?        S     2019   1:11 nginx: worker process
+    [root@svc-yun-ejb4-vm nginx-1.14.2]# kill -9 48960
+    [root@svc-yun-ejb4-vm nginx-1.14.2]# kill -9 48961
+    [root@svc-yun-ejb4-vm nginx-1.14.2]# cp ./objs/nginx /usr/local/nginx/sbin/
+    cp: overwrite ‘/usr/local/nginx/sbin/nginx’? y
+    ```
+    6. 启动nginx
+    [root@svc-yun-ejb4-vm sbin]# /usr/local/nginx/sbin/nginx
+    7. 查看安装
+    ```
+    [root@svc-yun-ejb4-vm sbin]# /usr/local/nginx/sbin/nginx -V
+    nginx version: nginx/1.14.2
+    built by gcc 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC) 
+    built with OpenSSL 1.0.2k-fips  26 Jan 2017
+    TLS SNI support enabled
+    configure arguments: --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module
+    ```
+3. 重新加载nginx
+```
+    server {
+        listen       443 ssl;
+        listen       [::]:443 ssl;
+        server_name  h5sc.csair.com;
+
+        ssl_certificate      /usr/local/nginx/https_certificate/server.crt;
+        ssl_certificate_key  /usr/local/nginx/https_certificate/server.key;
+
+        ssl_session_cache    shared:SSL:1m;
+        ssl_session_timeout  5m;
+
+        ssl_ciphers  HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers  on;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+    }
+```
+
+查看23 的IPv6地址
+[root@svc-yun-ejb4-vm nginx-1.14.2]# ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.27.62.23  netmask 255.255.255.0  broadcast 172.27.62.255
+        inet6 fe80::5147:8540:36ae:9148  prefixlen 64  scopeid 0x20<link>
+        inet6 fc00:1:a:1b3e::ac1b:3e17  prefixlen 64  scopeid 0x0<global>
+        inet6 fe80::9349:4b02:c213:d9d2  prefixlen 64  scopeid 0x20<link>
+        ether 00:15:5d:fc:2d:2e  txqueuelen 1000  (Ethernet)
+        RX packets 9468095  bytes 1739374133 (1.6 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 31253198  bytes 4284611597 (3.9 GiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1  (Local Loopback)
+        RX packets 5215118  bytes 296761368 (283.0 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 5215118  bytes 296761368 (283.0 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+查看22 的IPv6地址
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
