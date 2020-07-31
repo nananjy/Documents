@@ -213,9 +213,9 @@ java version "1.8.0_91"
 Java(TM) SE Runtime Environment (build 1.8.0_91-b14)
 Java HotSpot(TM) 64-Bit Server VM (build 25.91-b14, mixed mode)
 ```
-2. zoo.cfg配置说明
+2. 修改配置文件zoo-1.cfg，原配置文件里有的，修改成下面的值，没有的则加上
 ```
-[root@CBD-WEB-T1 zookeeper-3.4.9]# less conf/zoo.cfg 
+[root@CBD-WEB-T1 zookeeper-3.4.9]# less conf/zoo-1.cfg 
 # The number of milliseconds of each tick
 tickTime=2000								#服务器之间或客户端与服务器之间维持心跳的间隔
 # The number of ticks that the initial 
@@ -227,7 +227,7 @@ syncLimit=5									#Leader与Follower之间发送消息，请求和应答时间
 # the directory where the snapshot is stored.
 # do not use /tmp for storage, /tmp here is just 
 # example sakes.
-dataDir=/tmp/zookeeper 						#保存数据、日志的目录
+dataDir=/tmp/zookeeper-1 						#保存数据、日志的目录
 # the port at which the clients will connect
 clientPort=2181 							#客户端连接 Zookeeper 服务器的端口，Zookeeper 会监听这个端口，接受客户端的访问请求
 # the maximum number of client connections.
@@ -241,13 +241,68 @@ clientPort=2181 							#客户端连接 Zookeeper 服务器的端口，Zookeeper
 # Purge task interval in hours
 # Set to "0" to disable auto purge feature
 #autopurge.purgeInterval=1
-
-
+server.1=127.0.0.1:2888:3888
+server.2=127.0.0.1:2889:3889
+server.3=127.0.0.1:2890:3890
 
 server.A=B：C：D：其中 A 是一个数字，表示这个是第几号服务器；B 是这个服务器的 ip 地址；C 表示的是这个服务器与集群中的 Leader 服务器交换信息的端口；D 表示的是万一集群中的 Leader 服务器挂了，需要一个端口来重新进行选举，选出一个新的 Leader，而这个端口就是用来执行选举时服务器相互通信的端口。如果是伪集群的配置方式，由于 B 都是一样，所以不同的 Zookeeper 实例通信端口号不能一样，所以要给它们分配不同的端口号。
 ```
-3. 
-
+3. 从zoo-1.cfg复制两个配置文件zoo-2.cfg和zoo-3.cfg，只需修改dataDir和clientPort不同即可
+```
+[root@CBD-WEB-T1 conf]# cp zoo-1.cfg zoo-2.cfg 
+[root@CBD-WEB-T1 conf]# vi zoo-2.cfg 
+dataDir=/tmp/zookeeper-2
+clientPort=2182
+[root@CBD-WEB-T1 conf]# cp zoo-1.cfg zoo-3.cfg
+dataDir=/tmp/zookeeper-3
+clientPort=2183
+```
+4. 标识ServerID
+```
+[root@CBD-WEB-T1 conf]# vi /tmp/zookeeper-1/myid
+1
+[root@CBD-WEB-T1 conf]# vi /tmp/zookeeper-2/myid
+2
+[root@CBD-WEB-T1 conf]# vi /tmp/zookeeper-3/myid
+3
+```
+5. 启动三个zookeeper实例
+```
+[root@CBD-WEB-T1 conf]# ../bin/zkServer.sh start zoo-1.cfg 
+ZooKeeper JMX enabled by default
+Using config: /home/zookeeper/zookeeper-3.4.9/bin/../conf/zoo-1.cfg
+Starting zookeeper ... STARTED
+[root@CBD-WEB-T1 conf]# ../bin/zkServer.sh start zoo-2.cfg 
+ZooKeeper JMX enabled by default
+Using config: /home/zookeeper/zookeeper-3.4.9/bin/../conf/zoo-2.cfg
+Starting zookeeper ... STARTED
+[root@CBD-WEB-T1 conf]# ../bin/zkServer.sh start zoo-3.cfg 
+ZooKeeper JMX enabled by default
+Using config: /home/zookeeper/zookeeper-3.4.9/bin/../conf/zoo-3.cfg
+Starting zookeeper ... STARTED
+```
+6. 检测集群状态，也可以直接用命令“zkCli.sh -server IP:PORT”连接zookeeper服务端检测
+```
+[root@CBD-WEB-T1 conf]# ../bin/zkServer.sh status zoo-1.cfg 
+ZooKeeper JMX enabled by default
+Using config: /home/zookeeper/zookeeper-3.4.9/bin/../conf/zoo-1.cfg
+Mode: follower
+[root@CBD-WEB-T1 conf]# ../bin/zkServer.sh status zoo-2.cfg 
+ZooKeeper JMX enabled by default
+Using config: /home/zookeeper/zookeeper-3.4.9/bin/../conf/zoo-2.cfg
+Mode: follower
+[root@CBD-WEB-T1 conf]# ../bin/zkServer.sh status zoo-3.cfg 
+ZooKeeper JMX enabled by default
+Using config: /home/zookeeper/zookeeper-3.4.9/bin/../conf/zoo-3.cfg
+Mode: leader
+```
+7. 停止zookeeper实例
+```
+[root@CBD-WEB-T1 conf]# ../bin/zkServer.sh stop zoo.cfg 
+ZooKeeper JMX enabled by default
+Using config: /home/zookeeper/zookeeper-3.4.9/bin/../conf/zoo.cfg
+Stopping zookeeper ... STOPPED
+```
 
 ## Zookeeper2181端口未授权访问iptables编写规则
 - 查看当前规则
