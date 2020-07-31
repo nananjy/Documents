@@ -58,6 +58,7 @@ request.setAttribute("tomcatExamplesUrl", "/examples/");
             proxy_pass   http://10.79.4.79:8080;
             proxy_set_header X-real-ip $remote_addr;
             proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
 ```
 4. 重新加载配置文件

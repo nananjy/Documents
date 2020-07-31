@@ -116,7 +116,13 @@ http
     server_name localhost;#域名
     index index.html index.htm index.php;
     root /usr/local/webserver/nginx/html;#站点目录
-      location ~ .*\.(php|php5)?$
+    #为了原本的80端口即http的普通协议能够转换到https这边来，可以添加一条规则
+    return    301 https://$server_name$request_uri;
+    # 有两种配置模式，目录匹配或后缀匹配,任选其一或搭配使用
+    location ^~ /static/ {
+        root /webroot/static/;
+    }
+    location ~ .*\.(php|php5)?$
     {
       #fastcgi_pass unix:/tmp/php-cgi.sock;
       fastcgi_pass 127.0.0.1:9000;
