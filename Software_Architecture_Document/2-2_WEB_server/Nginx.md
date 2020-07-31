@@ -312,7 +312,6 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         TX packets 5215118  bytes 296761368 (283.0 MiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
-查看22 的IPv6地址
 
 
 

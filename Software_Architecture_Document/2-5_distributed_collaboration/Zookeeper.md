@@ -280,25 +280,25 @@ num   pkts bytes target     prot opt in     out     source               destina
 Chain OUTPUT (policy ACCEPT 16462 packets, 1632K bytes)
 num   pkts bytes target     prot opt in     out     source               destination      
 ```
-- 添加到规则末尾
+- **添加**到规则末尾
 >[root@CBD-Hadoop-DataNode22 ~]# iptables -A INPUT -s 10.68.32.51 -p tcp --dport 2181 -j ACCEPT
 - 插入到规则指定位置，默认插入到规则首部
 >[root@CBD-Hadoop-DataNode22 ~]# iptables -I INPUT -s 10.68.32.49 -p tcp --dport 2181 -j ACCEPT
 ><br/>[root@CBD-Hadoop-DataNode24 ~]# iptables -I INPUT 2 -s 10.68.32.49 -p tcp --dport 2181 -j ACCEPT
-- 删除第二行规则
+- **删除**第二行规则
 >[root@CBD-Hadoop-DataNode22 ~]# iptables -D INPUT 2
 - 测试网络关系
+```
 [root@CBD-Hadoop-DataNode23 ~]# telnet 10.68.32.29 2181
 Trying 10.68.32.29...
 Connected to 10.68.32.29.
 Escape character is '^]'.
 ^CConnection closed by foreign host.
+```
+- **修改**第四条规则为ACCEPT
+>[root@CBD-Hadoop-DataNode23 ~]# iptables -R INPUT 4 -j ACCEPT
 -- 配置生效，启动情况下无需重启
-service iptables save
-service iptables restart
-
-
-
-
-
+>service iptables save
+><br/>service iptables restart
+- iptables命令使用详解(https://www.cnblogs.com/vathe/p/6973656.html) 
 
