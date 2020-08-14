@@ -8,3 +8,6 @@ Apollo支持4个维度管理Key-Value格式的配置：
  - namespace (命名空间)
 
  
+host:10.79.0.115 port:21 username:cbd_ugduser password:cbduser*2018 path:/plane_upg_black_list fileName:/opt/cbPsgUpgradeFeedback.txt localPath:D://
+host:10.79.0.115 port:21 username:cbd_ugduser password:cbduser*2018 path:/plane_upg_black_list fileName:cbPsgUpgradeFeedback.txt localPath:D://
+host:10.79.0.115 port:21 username:cbd_ugduser password:cbduser*2018 path:/plane_upg_black_list fileName:cbPsgUpgradeFeedback.txt localPath:D:
