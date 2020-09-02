@@ -1,8 +1,8 @@
 # Oracle
 
 * [Oracle安装](#tag1)
-    *[配置账户、目录、环境变量](#tag1-1)
-    *[配置VNC](#tag1-2)
+    * [配置账户、目录、环境变量](#tag1-1)
+    * [配置VNC](#tag1-2)
 * [Oracle表空间](#tag2)
 
 ## <span id = "tag1">Oracle安装</span>
