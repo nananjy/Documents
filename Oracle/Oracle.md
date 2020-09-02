@@ -1,6 +1,9 @@
 # Oracle
 
-## Oracle安装
+* [Oracle安装](#tag1)
+* [Oracle表空间](#tag2)
+
+## <span id = "tag1">Oracle安装</span>
 - 上传oracle包，linux6.1包(用于配置yum源，安装可视化桌面）
 ```
 -rw-r--r--. 1 root root      58300 Aug 12 15:41 ftp-0.17-51.1.el6.x86_64.rpm
@@ -235,7 +238,7 @@ https://pkgs.org/search/?q=pdksh
 
 
 
-## Oracle表空间
+## <a name = "tag2">Oracle表空间</a>
 
 - Oracle创建表空间
 >create tablespace ycm logging datafile 'D:\oracleData\ycm.dbf' size 50m autoextend on next 50m maxsize 1024m extent management local;
