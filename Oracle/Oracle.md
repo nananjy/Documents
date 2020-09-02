@@ -1,9 +1,13 @@
 # Oracle
 
 * [Oracle安装](#tag1)
+    *[配置账户、目录、环境变量](#tag1-1)
+    *[配置VNC](#tag1-2)
 * [Oracle表空间](#tag2)
 
 ## <span id = "tag1">Oracle安装</span>
+
+### <span id = "tag1-1">配置账户、目录、环境变量</span>
 - 上传oracle包，linux6.1包(用于配置yum源，安装可视化桌面）
 ```
 -rw-r--r--. 1 root root      58300 Aug 12 15:41 ftp-0.17-51.1.el6.x86_64.rpm
@@ -85,7 +89,7 @@ PATH=$PATH:/usr/bin; export PATH
 >source $HOME/.bash_profile
 - 
 
-### 配置VNC
+### <span id = "tag1-2">配置VNC</span>
 - 首次安装配置vncserver，需输入两次密码zzy123
 ```
 [root@test01 ~]# vncserver
