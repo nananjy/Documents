@@ -2,14 +2,15 @@
 
 ## 查看Mysql版本
 >[root@test02 opt]# select version();
-`5.5.31-log`
+<br/>`5.5.31-log`
 
 ## 提示too many connections，连接数不够，连接时间太长
 >[root@test02 opt]# mysql
-`
+```
 ERROR 1040 (HY000): Too many connections
 mysql默认连接数100
-`
+```
+
 - 修改最大连接数
 >[root@test02 opt]# vi /etc/my.cnf
 ><br/>max_connections=1000
