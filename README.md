@@ -23,5 +23,15 @@ https://github.com/nananjy/Documents/blob/master/Software_Architecture_Document/
 在链接前后添加\`(backtick)扩起来
 2. 换行 
 方式一，添加\<br/>；方式二，文末添加两个空格字符；方式三，文字前后空一行。
-
-
+3. 锚点配置
+  1. 创建锚点
+  ```
+  [Oracle安装](#tag1)
+  [Oracle表空间](#tag2)
+  ```
+  2. 跳转到的位置
+  ```
+  <span id = "tag1">Oracle安装</span>
+  <a name = "tag2">Oracle表空间</a>
+  ```
+  
