@@ -11,7 +11,7 @@
 7. git commit -m '提交软件框架'
 8. git push
 9. git pull --rebase origin master(如果是因为github中的README.md文件不在本地代码目录中， 命令进行代码合并)
-
+10. git clone -b branchA https://github.com/nananjy/Documents.git
 
 ## 业内跳转
 
