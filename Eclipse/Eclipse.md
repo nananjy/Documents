@@ -13,3 +13,4 @@
 <br/>项目上右键Properties——》Java Compile——》选择java版本。
 6. 错误二：缺少依赖的jar包。
 <br/>项目右键java build path——》add exteral jars添加依赖包。
+7. 参考：https://jingyan.baidu.com/article/cbcede07107d9802f40b4dff.html
