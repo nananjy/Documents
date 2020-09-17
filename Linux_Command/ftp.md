@@ -2,11 +2,11 @@
 ## Linux修改用户访问主目录
 1. 方法一
 > vi /etc/passwd
-找到要修改的用户那几行，修改掉即可。此法很暴力，建议慎用。
+<br/>找到要修改的用户那几行，修改掉即可。此法很暴力，建议慎用。
 2. 方法二
 - 查看uid
 > [root@SVC-FTP vsftpd]# id svc_user
-<br/>`uid=505(svc_user) gid=506(svc_user) 组=506(svc_user)`
+`uid=505(svc_user) gid=506(svc_user) 组=506(svc_user)`
 - usermod方式修改用户主目录
 > usermod -d /home/svc_user -u 505 svc_user
 ```
@@ -29,6 +29,6 @@
 ```
 - 查看用户列表
 > [root@SVC-FTP vsftpd]# less /etc/passwd
-<br/>`svc_user:x:505:506::/home/svc_user:/sbin/nologin`
+`svc_user:x:505:506::/home/svc_user:/sbin/nologin`
 - 
 
