@@ -14,3 +14,10 @@
 6. 错误二：缺少依赖的jar包。
 <br/>项目右键java build path——》add exteral jars添加依赖包。
 7. 参考：https://jingyan.baidu.com/article/cbcede07107d9802f40b4dff.html
+
+## 将项目中的src/main/java目录设置为源代码包
+1. 打开navigator模式
+<br/>工具栏 window-> show view -> Navigator 
+2. 展开项目，打开.classpath文件
+<br/>在标签 <classpath> 中，第一行添加如下 <classpathentry kind="src" output="target/classes" path="src/main/java"/>
+3. 保存
