@@ -67,10 +67,8 @@ Starting MySQL.. SUCCESS!
   ```
 	[mysqld]
 	character-set-server=utf8mb4
-
 	[mysql]
 	default-character-set=utf8mb4
-
 	[client]
 	default-character-set=utf8mb4
   ```
@@ -78,4 +76,3 @@ Starting MySQL.. SUCCESS!
 	service mysql restart
 - 参考
 	https://www.cnblogs.com/rainerl/p/10950472.html
-
