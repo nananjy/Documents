@@ -87,3 +87,11 @@ Using CLASSPATH:       /opt/apache-tomcat-8.0.50/bin/bootstrap.jar:/opt/apache-t
 Tomcat started.
 ```
 - 参考：https://www.cnblogs.com/xd502djj/p/6668632.html
+
+### linux查看路由的三种方式
+- route
+- netstat -route
+- ip route
+
+
+

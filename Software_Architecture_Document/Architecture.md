@@ -67,6 +67,7 @@
 
 #### 分布式协同(distributed_collaboration)
  - [Zookeeper](2-5_distributed_collaboration/Zookeeper.md)
+ - [Nacos](2-5_distributed_collaboration/Nacos.md)
 
 #### 消息队列(message_queue)
  - [RocketMQ](2-6_message_queue/RocketMQ.md)

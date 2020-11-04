@@ -49,3 +49,33 @@ Starting MySQL.. SUCCESS!
 13 rows in set (0.00 sec)
 ```
 
+## MySQL Err126错误[Err] 126 - Incorrect key file for table '.\device\table_name.MYI'; try to repair it
+1. 先对表进行检查，检查表命令 CHECK TABLE table_name;结果若有错误Msg_type有error修复，正常为status;
+2. 对表进行修复，修复表命令 repair table table_name;
+3. 再重新进行select查询即可。
+
+## 异常问题:Error updating database.  Cause: java.sql.SQLException: Incorrect string value: '\xE2\x80\x86f\xE2\x80...' for column 'staff_id' at row 1
+- 原因
+	当insert数据中有表情时发生。而这些表情是按照4个字节一个单位进行编码的，而我们使用的utf-8编码在mysql数据库中默认是按照3个字节一个单位进行编码的。
+- 步骤
+1. 连接mysql服务
+	Mysql -uroot -p root
+2. 查看当前mysql数据库编码集
+	SHOW VARIABLES Like '%char%';
+3. 修改linux上的mysql服务配置文件
+  1. 修改mysql/my.cnf文件，添加以下配置:
+  ```
+	[mysqld]
+	character-set-server=utf8mb4
+
+	[mysql]
+	default-character-set=utf8mb4
+
+	[client]
+	default-character-set=utf8mb4
+  ```
+4. 重启linux的mysql服务，重复第一步查看mysql编码集
+	service mysql restart
+- 参考
+	https://www.cnblogs.com/rainerl/p/10950472.html
+
