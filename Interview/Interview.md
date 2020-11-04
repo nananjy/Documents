@@ -6,19 +6,19 @@
 ```
 测试
 文件 application.yml
-test: 2020
+    test: 2020
 文件 AnnocationAndCode.java
-@RestController
-@RequestMapping("/test")
-public class AnnocationAndCode {
-    @Value("${test}")
-    private int temp = 0;
-    @GetMapping("/test")
-    private int testAnnocation() {
-        System.out.println("temp=" + temp);
-        return temp;
+    @RestController
+    @RequestMapping("/test")
+    public class AnnocationAndCode {
+        @Value("${test}")
+        private int temp = 0;
+        @GetMapping("/test")
+        private int testAnnocation() {
+            System.out.println("temp=" + temp);
+            return temp;
+        }
     }
-}
 ```
 
 
