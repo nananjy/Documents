@@ -141,8 +141,11 @@ Vnc viewer连接超时
 服务器打开了 vncserver但是vnc viewer无法连接，连接超时。
 原因：服务器打开了防火墙需要手工开启相应的端口号：
 [root@localhost~]# iptables -I INPUT -p tcp --dport 5901 -j ACCEPT    #
+- linux下执行xhost +命令进入图形界面报错：unable to open display
+> 执行export DISPLAY=localhost:1 使得所有客户都可以访问
+><br/> xhost + ip 指定ip机器可以使用该服务
 
-- 
+### Oracle运行安装 
 [oracle@test01 database]$ ./runInstaller
 Starting Oracle Universal Installer...
 
@@ -162,7 +165,8 @@ https://blog.csdn.net/benbenzhuhwp/article/details/45013587?utm_source=blogxgwz8
 ### Centos6.9升级glibc解决“libc.so.6: version GLIBC_2.14 not found”报错问题
 https://blog.csdn.net/heylun/article/details/78833050?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase
 
-### root执行
+### root执行，配置权限
+```
 [root@test01 oraInventory]# ./orainstRoot.sh                            
 Changing permissions of /opt/oraInventory.                              
 Adding read,write permissions for group.                                
@@ -170,8 +174,9 @@ Removing read,write,execute permissions for world.
 
 Changing groupname of /opt/oraInventory to dba.
 The execution of the script is complete.  
-
-###
+```
+### 配置环境变量
+```
 [root@test01 OraHome]# ./root.sh
 Running Oracle 11g root.sh script...
 
@@ -190,10 +195,10 @@ Database Configuration Assistant when a database is created
 Finished running generic part of root.sh script.
 Now product-specific root actions will be performed.
 Finished product-specific root actions.
-
+```
 ### 监听配置
+```
 [oracle@test01 database]$ netca
-
 Oracle Net Services Configuration:
 Configuring Listener:LISTENER
 Listener configuration complete.
@@ -203,9 +208,11 @@ Oracle Net Listener Startup:
     Listener Control complete.
     Listener started successfully.
 Oracle Net Services configuration successful. The exit code is 0
+```
 ### 安装数据库程序
 
 ### 安装RPM包
+```
 安装rpm包
 sudo rpm -Uvh *-2.17-55.el6.x86_64.rpm --force --nodeps
 
@@ -221,11 +228,10 @@ unixODBC-devel-2.2.14-11.el6(x86_64) 已经安装
 yum list libaio-devel 查看下名字
 之后yum install libaio-devel-0.3.105.i386
 
-
 如果已经安装了该库，可以尝试rpm强制安装
 libc.so.6(GLIBC_2.14)(64bit) is needed by问题 
 已经安装glibc2.14，rpm安装还是报错
-
+```
 ### vncserver 配置
 https://jingyan.baidu.com/article/92255446a89400851648f4b9.html
 
@@ -291,6 +297,23 @@ https://pkgs.org/search/?q=pdksh
 - 查看哪些用户有sysdba或sysoper系统权限(查询时需要相应权限)
 >select * from V$PWFILE_USERS;
 
+- 登录Oracle
+>sqlplus /nolog
+><br/>conn / as sysdba
+
+- 授予权限
+>grant create session to ycm;--连接数据库
+><grant unlimited tablespace to 用户名;
+
+grant create table to 用户名;
+创建表权限
+grante drop table to 用户名;
+删除表权限
+grant insert table to 用户名;
+插入表权限
+grant update table to 用户名;
+更新表权限
+
 ## Oracle连接数
 - 查看不用用户连接数
 >select username,count(username) from v$session where username is not null group by username;
@@ -303,6 +326,14 @@ https://pkgs.org/search/?q=pdksh
 - 重启数据库
 >shutdown immediate;
 ><br/>startup;
+   - 启动报错LRM-00109: could not open parameter file '/u01/oracle/product/OraHome/dbs/inithbdb.ora'
+   ```
+   你的ORACLE_SID参数有问题，三个地方的SID可以查一下是否一致：
+   1、$ORACLE_BASE/admin/SID_NAME/pfile文件夹下的init文件中的SID;
+   2、/etc/oratab中的最回后一行答第一个":"前，如"oracl:/u01/app/oracle/product/11.2.0/dbhome_1:N"中的"oracl";
+   3、.bash_profile中的SID;
+   先startup，再conn。
+   ```
 
 ## Oracle数据回滚:基于时间的查询（AS OF TIMESTAMP）
 >create table informationlaw_bak as
@@ -314,5 +345,57 @@ https://pkgs.org/search/?q=pdksh
 
 - impdp 服务器端导入工具
 
+## Oracle一次性插入多条数据操作
+- 问题：每次使用需要向数据库插入很多数据，导致页面等待很长时间才有结果。
+  id：采用sequence自增
+  每次循环，都会查询一次sequence，然后insert一条数据，性能非常低。
+- 解决
+> 在oracle里面，不支持像mysql那样直接在后面拼多个记录。
+```
+INSERT INTO `table_data` VALUES 
+(50, '2020-11-1', 'success', 'Y'), 
+(51, '2020-11-2', 'success', 'Y'); 
+```
+oracle中有两种方法达到批量插入的效果
+1. 采用union all拼接查询方式
+```
+INSERT INTO "table_data" 
+SELECT 'CSXM201609F00190', 'keyword5' FROM dual
+UNION ALL 
+SELECT 'CSXM201609F00190', 'keyword6' FROM dual
+UNION ALL 
+SELECT 'CSXM201609F00190', 'keyword7' FROM dual; 
+```
+2. 采用insert all的方式，insert all还支持往不同的表里插入数据
+```
+通过sequence获取的值是同一个，采用触发器方式自动设置id。
+-- 创建序列
+create sequence seq_table 
+minvalue 1
+maxvalue 999999999999999999999999
+start with 1
+increment by 1
+cache 20;
+-- 创建触发器
+create or replace trigger tr_test_insert
+before insert on test_insert
+for each row
+begin
+  select seq_ttable.nextval into :new.id from dual;
+end;
+-- 插入数据
+insert all 
+into table(name,age) values('aaa','8')
+into table(name,age) values('bbb','2')
+into table(name,age) values('ccc','4')
+select * from dual;
+```
+
+## Root账号跳转到Oracle账号，执行sqlplus报错
+- su oracle 和 su - oracle的区别
+```
+-, -l ,–login make the shell a login shell
+加了‘-’，是以login shell登陆的，所以会设置环境变量，如果不加，使用的还是切换前用户的环境变量，报错。
+```
 
 
