@@ -164,6 +164,23 @@ https://www.cnblogs.com/rusking/p/4388589.html
 https://blog.csdn.net/benbenzhuhwp/article/details/45013587?utm_source=blogxgwz8
 ### Centos6.9升级glibc解决“libc.so.6: version GLIBC_2.14 not found”报错问题
 https://blog.csdn.net/heylun/article/details/78833050?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase
+### 问题列表
+1. 依赖包检查失败， Centos7 上安装的依赖包要比 oracle 11g 所需要的版本更高，可以直接忽略。
+2. semmni 检查失败， sysctl.con f 里配置的 semmni 是 4096 ，远大于 128 ，但是检查 semmni 提示是0，忽略。
+3. 安装到84%报Error in invoking target ‘ install ’  of makefile '/u01/app/oracle/product/11.2.0/dbhome_1/ctx/lib/ins_ctx.mk'
+   原因：看日志缺少32 位相关依赖包。
+   解决：修改/u01/app/oracle/product/11.2.0/dbhome_1/ctx/lib/ins_ctx.mk，将 
+    ctxhx: $(CTXHXOBJ) 
+          $(LINK_CTXHX) $(CTXHXOBJ) $(INSO_LINK) 
+   修改为： 
+    ctxhx: $(CTXHXOBJ) 
+          -static $(LINK_CTXHX) $(CTXHXOBJ) $(INSO_LINK) /usr/lib64/stdc.a
+   点击Retry继续安装
+4. 接着报Error in invoking target 'agent nmhs' of makefile '/u01/app/oracle/product/11.2.0/dbhome_1/sysman/lib/ins_emagent.mk.'
+   解决：在makefile中添加链接libnnz11库的参数 
+   修改/u01/app/oracle/product/11.2.0/dbhome_1/sysman/lib/ins_emagent.mk，将 
+    $(MK_EMAGENT_NMECTL)修改为：$(MK_EMAGENT_NMECTL) -lnnz11 
+   点击Retry继续安装。 其中：-lnnz 和 $(MK_EMAGENT_NMECTL) 之间有空格
 
 ### root执行，配置权限
 ```
@@ -285,6 +302,11 @@ https://pkgs.org/search/?q=pdksh
 - 查找用户
 >select *　from dba_users;
 
+- 删除用户
+>drop user ycm;
+><br/>若用户拥有对象，则不能直接删除，否则将返回一个错误值。指定关键字cascade,可删除用户所有的对象，然后再删除用户。
+><br/>drop user ycm cascade;
+
 - 查找工作空间的路径
 >select * from dba_data_files; 
 
@@ -303,16 +325,23 @@ https://pkgs.org/search/?q=pdksh
 
 - 授予权限
 >grant create session to ycm;--连接数据库
-><grant unlimited tablespace to 用户名;
+><br/>grant unlimited tablespace to 用户名;--操作表空间
+><br/>grant create table to 用户名;--创建表
+><br/>grante drop table to 用户名;--删除表
+><br/>grant insert table to 用户名;--插入表
+><br/>grant update table to 用户名;--更新表
+><br/>connect(只对其他用户的表有访问权限，包括select/insert/update和delete等，还能够创建表、视图、序列(sequence)、簇(cluster)、同义词(synonym)、回话(session)和其他  数据的链(link))
+><br/>resource(给用户另外的权限以创建他们自己的表、序列、过程(procedure)、触发器(trigger)、索引(index)和簇(cluster))
+><br/>dba(系统权限，包括无限制的空间限额和给其他用户授予各种权限的能力。system由dba用户拥有)
 
-grant create table to 用户名;
-创建表权限
-grante drop table to 用户名;
-删除表权限
-grant insert table to 用户名;
-插入表权限
-grant update table to 用户名;
-更新表权限
+- 撤销权限
+>revoke connect, resource from ycm;
+
+- 创建/授权/删除角色
+>用户创建的role可以由表或系统权限或两者的组合构成。
+><br/>create role test;--创建角色
+><br/>grant select on class to test;--拥有testRole角色的所有用户都具有对class表的select查询权限
+><br/>drop role testRole;--与testRole角色相关的权限将从数据库全部删除
 
 ## Oracle连接数
 - 查看不用用户连接数
@@ -328,11 +357,23 @@ grant update table to 用户名;
 ><br/>startup;
    - 启动报错LRM-00109: could not open parameter file '/u01/oracle/product/OraHome/dbs/inithbdb.ora'
    ```
-   你的ORACLE_SID参数有问题，三个地方的SID可以查一下是否一致：
-   1、$ORACLE_BASE/admin/SID_NAME/pfile文件夹下的init文件中的SID;
-   2、/etc/oratab中的最回后一行答第一个":"前，如"oracl:/u01/app/oracle/product/11.2.0/dbhome_1:N"中的"oracl";
-   3、.bash_profile中的SID;
-   先startup，再conn。
+    你的ORACLE_SID参数有问题，三个地方的SID可以查一下是否一致：
+    1、$ORACLE_BASE/admin/SID_NAME/pfile文件夹下的init文件中的SID;
+    2、/etc/oratab中的最回后一行答第一个":"前，如"oracl:/u01/app/oracle/product/11.2.0/dbhome_1:N"中的"oracl";
+    3、.bash_profile中的SID;
+    先startup，再conn。
+   ```
+   - 报错ERROR at line 1:ORA-01034: ORACLE not available
+   解决：先测试一下，监听是否启动：lsnrctl status;然后输入startup，启动oracle。
+   - 下列错误，是非正常关闭导致LOG损坏
+   ```
+    ORA-16038: log 2 sequence# 1 cannot be archived 
+    ORA-19809: limit exceeded for recovery files 
+    ORA-00312: online log 2 thread 1: '/home/oracle/oradata/orc2/redo02.log' 
+    需进行不完全恢复 
+    SQL>startup mount 
+    SQL>recover database until cancel 
+    SQL>alter database open resetlogs;
    ```
 
 ## Oracle数据回滚:基于时间的查询（AS OF TIMESTAMP）
