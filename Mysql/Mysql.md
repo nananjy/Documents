@@ -14,14 +14,13 @@
 ><br/>./mysqld --initialize --user=mysql --datadir=/usr/local/mysql/data --basedir=/usr/local/mysql
 <blockquote>
 *补充说明*
-第5步 可能会出现错误
-```
-./mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
-```
-该问题出现首先检查有没有指定文件，没有则安装
->rpm -qa | grep libaio
-><br/>yum install libaio-devel.x86_64
+<br/>第5步 可能会出现错误
+<br/>./mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+<br/>该问题出现首先检查有没有指定文件，没有则安装
+<br/>rpm -qa | grep libaio
+<br/>yum install libaio-devel.x86_64
 </blockquote>
+
 6. 运行初始化命令成功，日志
 ```
 [root@izuf6anc2b2vgf95tkc5y4z bin]# ./mysqld --initialize --user=mysql --datadir=/usr/local/mysql/data --basedir=/usr/local/mysql
@@ -50,6 +49,7 @@ character_set_server=utf8
 `lower_case_table_names`：是否区分大小写，1表示存储时表名为小写，操作时不区分大小写；0表示区分大小写；不能动态设置，修改后，必须重启才能生效：
 <br/>`character_set_server`：设置数据库默认字符集，如果不设置默认为latin1
 <br/>`innodb_file_per_table`：是否将每个表的数据单独存储，1表示单独存储；0表示关闭独立表空间，可以通过查看数据目录，查看文件结构的区别
+
 8. 测试启动Mysql
 >[root@izuf6anc2b2vgf95tkc5y4z log-pid]# /usr/local/mysql/support-files/mysql.server start
 ><br/>Starting MySQL.                                            [  OK  ]
@@ -82,18 +82,17 @@ Query OK, 0 rows affected, 1 warning (0.00 sec)
 ```
 <blockquote>
 *补充说明*
-第10步 报错如下
-```
-ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
-```
-**mysql 支持 socket 和 TCP/IP 连接。那么 mysql.sock这个文件有什么用呢？
+<br/>第10步 报错如下
+<br/>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+<br/>**mysql 支持 socket 和 TCP/IP 连接。那么 mysql.sock这个文件有什么用呢？
 连接localhost通常通过一个Unix域套接字文件进行，一般是/tmp/mysql.sock。如果套接字文件被删除了，本地客户就不能连接。/tmp 文件夹属于临时文件，随时可能被删除。**
-   1. TCP 连接(如果报错 /tmp/mysql.sock，你可以尝试这种方式连接)
-   >mysql -uroot -h 127.0.0.1 -p
-   2. socket 连接，配置/etc/my.cnf
-   >[client]
-   >socket=/usr/local/mysql/data/mysql.sock
+<br/>1. TCP 连接(如果报错 /tmp/mysql.sock，你可以尝试这种方式连接)
+<br/>&ensp;mysql -uroot -h 127.0.0.1 -p
+<br/>2. socket 连接，配置/etc/my.cnf
+<br/>&ensp;[client]
+<br/>&ensp;socket=/usr/local/mysql/data/mysql.sock
 </blockquote>
+
 11. 开放远程连接
 ```
 mysql> use mysql;
@@ -105,14 +104,14 @@ msyql>update user set user.Host='%' where user.User='root';
 mysql>flush privileges;
 ```
 12. 设置开机自动启动
-   1. 将服务文件拷贝到init.d下，并重命名为mysql
-   >cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld
-   2. 赋予可执行权限
-   >chmod +x /etc/init.d/mysqld
-   3. 添加服务
-   >chkconfig --add mysqld
-   4. 显示服务列表
-   >chkconfig --list
+    1. 将服务文件拷贝到init.d下，并重命名为mysql
+    >cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld
+    2. 赋予可执行权限
+    >chmod +x /etc/init.d/mysqld
+    3. 添加服务
+    >chkconfig --add mysqld
+    4. 显示服务列表
+    >chkconfig --list
 13. 参考 https://www.jianshu.com/p/276d59cbc529
 
 ## 查看Mysql版本
