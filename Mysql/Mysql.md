@@ -13,7 +13,7 @@
 >cd /usr/local/mysql/bin
 ><br/>./mysqld --initialize --user=mysql --datadir=/usr/local/mysql/data --basedir=/usr/local/mysql
 <blockquote>
-<b><i>补充说明:</i></b>
+<b><i>补充说明：</i></b>
 <br/>第5步 可能会出现错误
 <br/>./mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 <br/>该问题出现首先检查有没有指定文件，没有则安装
@@ -81,7 +81,7 @@ mysql> set password for root@localhost = password('root');
 Query OK, 0 rows affected, 1 warning (0.00 sec)
 ```
 <blockquote>
-<b><i>补充说明:</i></b>
+<b><i>补充说明：</i></b>
 <br/>第10步 报错如下
 <br/>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
 <br/><b>mysql 支持 socket 和 TCP/IP 连接。那么 mysql.sock这个文件有什么用呢？
