@@ -1,5 +1,120 @@
 # Mysql
 
+## 安装Mysql
+1. 下载mysql-5.7.32-linux-glibc2.12-x86_64.tar.gz
+2. 新建目录mkdir /usr/local/mysql/data
+3. 新建用户及用户组
+>[root@izuf6anc2b2vgf95tkc5y4z mysql]# groupadd mysql
+><br/>[root@izuf6anc2b2vgf95tkc5y4z mysql]# useradd -g mysql mysql
+4. 修改mysql目录用户组及权限
+>chown -R mysql:mysql /usr/local/mysql
+><br/>chmod -R 755 /usr/local/mysql
+5. 编译安装并初始化mysql,务必初始化输出日志末尾的密码（数据库管理员临时密码）
+>cd /usr/local/mysql/bin
+><br/>./mysqld --initialize --user=mysql --datadir=/usr/local/mysql/data --basedir=/usr/local/mysql
+<blockquote>
+*补充说明*
+第5步 可能会出现错误
+```
+./mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+```
+该问题出现首先检查有没有指定文件，没有则安装
+>rpm -qa | grep libaio
+><br/>yum install libaio-devel.x86_64
+</blockquote>
+6. 运行初始化命令成功，日志
+```
+[root@izuf6anc2b2vgf95tkc5y4z bin]# ./mysqld --initialize --user=mysql --datadir=/usr/local/mysql/data --basedir=/usr/local/mysql
+2020-11-21T05:26:53.813451Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2020-11-21T05:26:54.824500Z 0 [Warning] InnoDB: New log files created, LSN=45790
+2020-11-21T05:26:54.942788Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.
+2020-11-21T05:26:55.010515Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 2afd93f0-2bba-11eb-9338-00163e2393cf.
+2020-11-21T05:26:55.012484Z 0 [Warning] Gtid table is not ready to be used. Table 'mysql.gtid_executed' cannot be opened.
+2020-11-21T05:26:55.738135Z 0 [Warning] CA certificate ca.pem is self signed.
+2020-11-21T05:26:55.800368Z 1 [Note] A temporary password is generated for root@localhost: dtZeMhf0J%jS
+```
+7. 编辑配置文件my.cnf，添加配置如下
+```
+[root@izuf6anc2b2vgf95tkc5y4z bin]# vi /etc/my.cnf
+
+[mysqld]
+datadir=/usr/local/mysql/data
+port=3306
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+symbolic-links=0
+max_connections=600
+innodb_file_per_table=1
+lower_case_table_names=1
+character_set_server=utf8
+```
+`lower_case_table_names`：是否区分大小写，1表示存储时表名为小写，操作时不区分大小写；0表示区分大小写；不能动态设置，修改后，必须重启才能生效：
+<br/>`character_set_server`：设置数据库默认字符集，如果不设置默认为latin1
+<br/>`innodb_file_per_table`：是否将每个表的数据单独存储，1表示单独存储；0表示关闭独立表空间，可以通过查看数据目录，查看文件结构的区别
+8. 测试启动Mysql
+>[root@izuf6anc2b2vgf95tkc5y4z log-pid]# /usr/local/mysql/support-files/mysql.server start
+><br/>Starting MySQL.                                            [  OK  ]
+9. 添加软连接，并重启mysql服务
+```
+[root@izuf6anc2b2vgf95tkc5y4z log-pid]# ln -s /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+[root@izuf6anc2b2vgf95tkc5y4z log-pid]# ln -s /usr/local/mysql/bin/mysql /usr/bin/mysql
+[root@izuf6anc2b2vgf95tkc5y4z log-pid]# service mysql restart
+Shutting down MySQL..                                      [  OK  ]
+Starting MySQL.                                            [  OK  ]
+```
+10. 登录mysql，修改密码(密码为步骤5生成的临时密码)
+```
+[root@izuf6anc2b2vgf95tkc5y4z ~]# mysql -uroot -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 2
+Server version: 5.7.32
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> set password for root@localhost = password('root');
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+```
+<blockquote>
+*补充说明*
+第10步 报错如下
+```
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+```
+**mysql 支持 socket 和 TCP/IP 连接。那么 mysql.sock这个文件有什么用呢？
+连接localhost通常通过一个Unix域套接字文件进行，一般是/tmp/mysql.sock。如果套接字文件被删除了，本地客户就不能连接。/tmp 文件夹属于临时文件，随时可能被删除。**
+   1. TCP 连接(如果报错 /tmp/mysql.sock，你可以尝试这种方式连接)
+   >mysql -uroot -h 127.0.0.1 -p
+   2. socket 连接，配置/etc/my.cnf
+   >[client]
+   >socket=/usr/local/mysql/data/mysql.sock
+</blockquote>
+11. 开放远程连接
+```
+mysql> use mysql;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+msyql>update user set user.Host='%' where user.User='root';
+mysql>flush privileges;
+```
+12. 设置开机自动启动
+   1. 将服务文件拷贝到init.d下，并重命名为mysql
+   >cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld
+   2. 赋予可执行权限
+   >chmod +x /etc/init.d/mysqld
+   3. 添加服务
+   >chkconfig --add mysqld
+   4. 显示服务列表
+   >chkconfig --list
+13. 参考 https://www.jianshu.com/p/276d59cbc529
+
 ## 查看Mysql版本
 >[root@test02 opt]# select version();
 <br/>`5.5.31-log`
