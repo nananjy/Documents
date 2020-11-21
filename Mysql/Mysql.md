@@ -13,7 +13,7 @@
 >cd /usr/local/mysql/bin
 ><br/>./mysqld --initialize --user=mysql --datadir=/usr/local/mysql/data --basedir=/usr/local/mysql
 <blockquote>
-*补充说明*
+<b><i>补充说明:</i></b>
 <br/>第5步 可能会出现错误
 <br/>./mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
 <br/>该问题出现首先检查有没有指定文件，没有则安装
@@ -81,11 +81,11 @@ mysql> set password for root@localhost = password('root');
 Query OK, 0 rows affected, 1 warning (0.00 sec)
 ```
 <blockquote>
-*补充说明*
+<b><i>补充说明:</i></b>
 <br/>第10步 报错如下
 <br/>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
-<br/>**mysql 支持 socket 和 TCP/IP 连接。那么 mysql.sock这个文件有什么用呢？
-连接localhost通常通过一个Unix域套接字文件进行，一般是/tmp/mysql.sock。如果套接字文件被删除了，本地客户就不能连接。/tmp 文件夹属于临时文件，随时可能被删除。**
+<br/><b>mysql 支持 socket 和 TCP/IP 连接。那么 mysql.sock这个文件有什么用呢？
+连接localhost通常通过一个Unix域套接字文件进行，一般是/tmp/mysql.sock。如果套接字文件被删除了，本地客户就不能连接。/tmp 文件夹属于临时文件，随时可能被删除。</b>
 <br/>1. TCP 连接(如果报错 /tmp/mysql.sock，你可以尝试这种方式连接)
 <br/>&ensp;mysql -uroot -h 127.0.0.1 -p
 <br/>2. socket 连接，配置/etc/my.cnf
