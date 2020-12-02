@@ -44,28 +44,31 @@ added 236 packages from 204 contributors in 95.069s
 	npm ERR!     C:\Users\wzy\AppData\Roaming\npm-cache\_logs\2020-12-01T09_26_21_243Z-debug.log
 ```
 <blockquote>
-	*错误解决*
-	- 清除你的npm缓存：npm cache clean -f 
-	<br/> npm WARN using --force I sure hope you know what you are doing.
-	- 安装最新版本Node Helper：npm install -g n
-	```
-	npm ERR! code EBADPLATFORM
-	npm ERR! notsup Unsupported platform for n@6.7.1: wanted {"os":"!win32","arch":"any"} (current: {"os":"win32","arch":"x64"})
-	npm ERR! notsup Valid OS:    !win32
-	npm ERR! notsup Valid Arch:  any
-	npm ERR! notsup Actual OS:   win32
-	npm ERR! notsup Actual Arch: x64
-	npm ERR! A complete log of this run can be found in:
-	npm ERR!     C:\Users\wzy\AppData\Roaming\npm-cache\_logs\2020-12-02T01_16_01_348Z-debug.log
-	```
-	- 强制安装npm install -g n --force
-	```
-	npm WARN using --force I sure hope you know what you are doing.
-	C:\Users\wzy\AppData\Roaming\npm\n -> C:\Users\wzy\AppData\Roaming\npm\node_modules\n\bin\n
-	+ n@6.7.1
-	added 1 package from 4 contributors in 1.018s
-	```
-	- 再次运行安装： npm install 
+	<i>错误解决</i>
+	<ul>
+		<li>清除你的npm缓存：npm cache clean -f </li>
+			<br/> npm WARN using --force I sure hope you know what you are doing.
+		<li>安装最新版本Node Helper：npm install -g n </li>
+		```
+		npm ERR! code EBADPLATFORM
+		npm ERR! notsup Unsupported platform for n@6.7.1: wanted {"os":"!win32","arch":"any"} (current: {"os":"win32","arch":"x64"})
+		npm ERR! notsup Valid OS:    !win32
+		npm ERR! notsup Valid Arch:  any
+		npm ERR! notsup Actual OS:   win32
+		npm ERR! notsup Actual Arch: x64
+		npm ERR! A complete log of this run can be found in:
+		npm ERR!     C:\Users\wzy\AppData\Roaming\npm-cache\_logs\2020-12-02T01_16_01_348Z-debug.log
+		```
+		<li>强制安装：npm install -g n --force</li>
+		```
+		npm WARN using --force I sure hope you know what you are doing.
+		C:\Users\wzy\AppData\Roaming\npm\n -> C:\Users\wzy\AppData\Roaming\npm\node_modules\n\bin\n
+		+ n@6.7.1
+		added 1 package from 4 contributors in 1.018s
+		```
+		<li>再次运行安装：npm install </li>
+		<li>查看npm默认配置：npm config ls -l</li>
+	</ul>
 </blockquote>
 8. 运行项目
     npm run dev
