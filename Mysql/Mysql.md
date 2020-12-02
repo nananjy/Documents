@@ -189,3 +189,23 @@ default-character-set=utf8mb4
 > service mysql restart
 - 参考
 > https://www.cnblogs.com/rainerl/p/10950472.html
+
+## 查看Mysql编码
+```
+mysql> show variables like '%char%';
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | gbk                        |
+| character_set_connection | gbk                        |
+| character_set_database   | gbk                        |
+| character_set_filesystem | binary                     |
+| character_set_results    | gbk                        |
+| character_set_server     | gbk                        |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+8 rows in set (0.00 sec)
+```
+<br/>修改配置。my.cnf不支持character_set_results. 改为 default-character-set=utf8
+

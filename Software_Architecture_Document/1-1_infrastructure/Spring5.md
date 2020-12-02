@@ -4,11 +4,11 @@
 
 ### [开闭原则（Open-Cloesd Principle, OCP）](1-1_开闭原则.md)
 &emsp;一个软件实体（如类、模块和函数）应该对扩展开放，对修改关闭。强调用抽象构建框架，用实现扩展细节，可以提高软件系统的可复用性及可维护性。
-<br/>实现：价格优惠变动。接口ICourse中写有`Double getPrice()`方法，JavaCourse类实现接口ICourse的方法`@Override public Double getPrice() {return this.price;}`，JavaDiscountCourse类继承JavaCourse类，重写方法`public Double getPrice() {return super.getPrice() * 0.85;}`。
+<br/>实现：价格优惠变动。接口ICourse中写有 `Double getPrice()` 方法，JavaCourse类实现接口ICourse的方法 `@Override public Double getPrice() {return this.price;}` ，JavaDiscountCourse类继承JavaCourse类，重写方法 ```public Double getPrice() {return super.getPrice() * 0.85;}``` 。
 
 ### [依赖倒置原则（Dependence Inversion Principle, DIP）](1-2_依赖倒置原则.md)
 &emsp;高层模块不依赖低层模块，均依赖其抽象。有依赖注入、构造器方式和Setter方式。
-<br/>实现：追加课程。接口ICourse中写有`void study()`方法，JavaCourse类实现接口ICourse的方法`@Override public void study() {log.info("Tom在学习Java课程");}`，PythonCourse类实现接口ICourse的方法`@Override public void study() {log.info("Tom在学习python课程");}`，Tom类中`public void study(ICourse course) { course.study(); }`，控制层Controller访问`@GetMapping(value = "dependenceInversionPrinciple") public String dependenceInversionPrinciple() {tom.studyJavaCourse(); tom.studyPythonCourse(); tom.study(new JavaCourse()); tom.study(new PythonCourse()); return "成功依赖倒置原则";}`。 构造器方式：Tom类中`private ICourse course; public Tom(ICourse course) {this.course = course;} public void study() { course.study(); }`，Controller访问`Tom tom1 = new Tom(new PythonCourse()); tom1.study();`。 Setter方式：如果Tom是全局单例，则我们就只能选择用Setter方式来注入。Tom类中`public Tom() {} public void setCourse(ICourse course) {this.course = course;}`，Controller访问`Tom tom2 = new Tom(); tom2.setCourse(new PythonCourse()); tom2.study();`。
+<br/>实现：追加课程。接口ICourse中写有 `void study()` 方法，JavaCourse类实现接口ICourse的方法 `@Override public void study() {log.info("Tom在学习Java课程");}` ，PythonCourse类实现接口ICourse的方法 `@Override public void study() {log.info("Tom在学习python课程");}` ，Tom类中 `public void study(ICourse course) { course.study(); }` ，控制层Controller访问 `@GetMapping(value = "dependenceInversionPrinciple") public String dependenceInversionPrinciple() {tom.studyJavaCourse(); tom.studyPythonCourse(); tom.study(new JavaCourse()); tom.study(new PythonCourse()); return "成功依赖倒置原则";}` 。 构造器方式：Tom类中 `private ICourse course; public Tom(ICourse course) {this.course = course;} public void study() { course.study(); }` ，Controller访问 `Tom tom1 = new Tom(new PythonCourse()); tom1.study();` 。 Setter方式：如果Tom是全局单例，则我们就只能选择用Setter方式来注入。Tom类中 `public Tom() {} public void setCourse(ICourse course) {this.course = course;}` ，Controller访问 `Tom tom2 = new Tom(); tom2.setCourse(new PythonCourse()); tom2.study();` 。
 <br/>切记：以抽象为基准比以细节为基准搭建起来的架构要稳定得多，因此在确定需求后，要面向接口编程，先顶层再细节地设计代码结构。
 
 ### [单一职责原则（Simple Responsibility Pinciple, SRP）](1-3_单一职责原则.md)
@@ -43,10 +43,11 @@
 
 
 ### 工厂模式详解
-
+#### 简单工厂模式
+&emsp;指由一个工厂对象决定创建哪一种产品类型的实例，但它不属于GoF的23种设计模式。适用于工厂类负责创建的对象较少的场景，且客户端只需要传入工厂类的参数，对于如何创建对象不需要关心。
 
 ### 单例模式详解
-
+&emsp;
 
 ### 原型模式详解
 
@@ -263,6 +264,7 @@
 ### 请举例解释@Required注解
 
 ### 请举例说明@Qualifier注解
+表明哪个Service实现类才是我们所需要的。注意需要搭配@Autowired使用，二者并非包含关系。
 
 ### 构造方法注入和设值注入有什么区别
 
