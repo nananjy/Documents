@@ -209,3 +209,5 @@ mysql> show variables like '%char%';
 ```
 <br/>修改配置。my.cnf不支持character_set_results. 改为 default-character-set=utf8
 
+## 查看表索引
+> show index from tablename; 
