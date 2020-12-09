@@ -439,4 +439,21 @@ select * from dual;
 加了‘-’，是以login shell登陆的，所以会设置环境变量，如果不加，使用的还是切换前用户的环境变量，报错。
 ```
 
+## Oracle误操作更新表记录后恢复（使用as of timestamp）
+1. 误操作指令，没有加where
+> update TBL_SCM_ACT_COM_TASK set com_status_cd = '8' 
+2. 查看指定时间点操作表的数据
+> select * from TBL_SCM_ACT_COM_TASK as of timestamp to_timestamp('2010-06-02 11:36:53','yyyy-mm-dd hh24:mi:ss');
+3. 找到数据，批量插入
+> update TBL_SCM_ACT_COM_TASK t1 
+<br/> set t1.com_status_cd= 
+<br/> (select com_status_cd
+<br/> from TBL_SCM_ACT_COM_TASK  as of timestamp sysdate - 20/1440 
+<br/> where t1.act_com_task_id = act_com_task_id) ; 
+4. FLASHBACK TABLE test TO TIMESTAMP TIMESTAMP '2010-3-18 10:00:00'; 这要求TEST表事先有ENABLE ROW MOVEMENT
+5. 误更新或者删除
+> alter table ch_t_song_info enable row movement;
+<br/> flashback table ch_t_song_info to timestamp to_timestamp('2013-11-27 14:00:00','yyyy-mm-dd hh24:mi:ss');
+6. 误drop
+> flashback table ch_t_song_info to before update
 
