@@ -10,7 +10,7 @@
 4. 查询分区所在位置
 > hdfs dfs -ls /user/hive/warehouse/db.db/wifi 
 <br/>或者
-<br/>> hadoop fs -ls /user/hive/warehouse/db.db/wifi 
+<br/> hadoop fs -ls /user/hive/warehouse/db.db/wifi 
 5. 删除分区
 > hdfs dfs -rm -r -f /user/hive/warehouse/db.db/wifi 
 
