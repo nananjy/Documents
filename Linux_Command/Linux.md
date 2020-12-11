@@ -94,5 +94,40 @@ Tomcat started.
 - ip route
 
 ### linux设置系统时间
+- 手动修改
+1. 查看当前时间
+> [root@localhost opt]# date
+<br/>Thu Dec 10 20:43:51 CST 2020
+2. 修改时间
+> date -s 时分秒
+3. 修改日期、时间
+> [root@localhost opt]# date -s '2020-12-11 14:34:50'
+<br/>date -s 完整日期时间（YYYY-MM-DD hh:mm[:ss]），时间要用双引号括起来，否则报错
+4. 将时间写入bios避免重启失效
+> [root@localhost opt]# hwclock -w
+<br/>当我们进行完 Linux 时间的校时后，还需要以 hwclock 来更新 BIOS 的时间，因为每次重新启动的时候，系统会重新由 BIOS 将时间读出来，所以，BIOS才是重要的时间依据吶。
+
+- 同步网络时间
+1. 检查系统是否安装ntp服务
+> apt-get install ntp  或者 yum install ntp
+2. 检查ntp服务是否启动
+> service --status-all
+3. ntpdate 服务器IP：同步服务器时间
+```
+ntp常用服务器：
+    中国国家授时中心：210.72.145.44
+    NTP服务器(上海) ：ntp.api.bz
+    美国：time.nist.gov 
+    复旦：ntp.fudan.edu.cn 
+    微软公司授时主机(美国) ：time.windows.com 
+    台警大授时中心(台湾)：asia.pool.ntp.org
+```
+4. 修改服务器时区
+> date -R ： 查看当前时区
+<br/> tzselect
+<br/> cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 时区没改回来
+
+### linux查看所有服务
+> service --status-all
 
 

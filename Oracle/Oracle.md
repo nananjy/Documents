@@ -440,6 +440,7 @@ select * from dual;
 ```
 
 ## Oracle误操作更新表记录后恢复（使用as of timestamp）
+- 2020.12.9
 1. 误操作指令，没有加where
 > update TBL_SCM_ACT_COM_TASK set com_status_cd = '8' 
 2. 查看指定时间点操作表的数据
@@ -456,4 +457,16 @@ select * from dual;
 <br/> flashback table ch_t_song_info to timestamp to_timestamp('2013-11-27 14:00:00','yyyy-mm-dd hh24:mi:ss');
 6. 误drop
 > flashback table ch_t_song_info to before update
+
+## Oracle报错 沟通名单生成失败-1step:100 error:ORA-01841: (full) year must be between -4713 an d +9999, and not be 0
+> to_date(t0.flightDate) >= to_date(t6.start_time) and  to_date(t0.flightDate) <= to_date(t6.end_time) 
+<br/> TO_DATE(SUBSTR(T3.BIRTHDAY,1,10),'YYYY-MM-DD') 沟通名单存储过程PMS_DBO.P_COMM_LIST_FROM_TARGET 
+<br/> 这种情况基本上就是要格式化的数据是错的，那么怎么来查哪些数据是错的
+<br/> SELECT * FROM DB WHERE  REGEXP_LIKE(start_time, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}')
+<br/> 查询出不是日期格式的数据，观察下其结果构成，一般情况下可能存在非日期类型，比如"XXXX"或空值，一般的，如果说这个字段存储日期的话，不能存其他的样式的数据，这种应该在业务方面控制好的，既然发生了，在SQL中对其进行过滤即可。
+
+
+
+
+
 
