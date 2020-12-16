@@ -130,4 +130,11 @@ ntp常用服务器：
 ### linux查看所有服务
 > service --status-all
 
+### 挂载光盘出现写保护mount: block device /dev/sr0 is write-protected, mounting read-only
+> [root@localhost /]# mount -o loop /opt/dvd.iso /mnt 
+<br/>mount: block device /dev/sr0 is write-protected, mounting read-only 
+<br/>虚拟机挂载光驱时提示只读，用以下命令可解决该报错 
+<br/>mount -o remount,rw /dev/cdrom /mnt/cdrom
+
+
 
